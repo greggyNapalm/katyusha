@@ -82,7 +82,8 @@ Options:
     fmt.Println(arguments)
     fmt.Println(arguments["KCFG_PATH"])
 
-    kcfg := katyushalib.ComposeCfg(arguments["KCFG_PATH"])
+    //kcfg := katyushalib.ComposeCfg(arguments["KCFG_PATH"])
+    kcfg := katyushalib.ComposeCfg("kconfig.json")
 
 	cpu_num := runtime.NumCPU()
 	runtime.GOMAXPROCS(cpu_num)
