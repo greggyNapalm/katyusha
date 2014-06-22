@@ -1,4 +1,0 @@
-katyusha
-========
-
-katyusha
