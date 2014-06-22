@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"log"
 	"strings"
+	"strconv"
     //"reflect"
 	"os/exec"
     "runtime"
@@ -24,11 +25,6 @@ type KConfig struct {
     MaxProcs int `json:"max_procs"`
 }
 
-type RuntimeInfo struct {
-    Uname string
-    GolangVer string
-    AvailableCores int
-}
 
 
 func (cfg *KConfig) Fulfil() {
@@ -40,6 +36,16 @@ func (cfg *KConfig) Fulfil() {
     if (cfg.CoroutinesCnt <= 0){
 	    cfg.CoroutinesCnt = DefaultCoroutinesCnt
     }
+}
+
+type RuntimeInfo struct {
+    Uname string
+    GolangVer string
+    AvailableCores int
+}
+
+func (info *RuntimeInfo) String() string {
+    return "uname: " + info.Uname + " / lang: " + info.GolangVer + " / avail cores: " + strconv.Itoa(info.AvailableCores)
 }
 
 func PrettyPrint(data interface{}) {
@@ -82,5 +88,5 @@ func CollectRuntimeInfo() RuntimeInfo {
 }
 
 func LogRuntimeiInfo(info RuntimeInfo, usedCores int, appVersion string) {
-  	log.Printf("Runtime: katyusha v.%s / golang %s / cores used %d of %d", appVersion, RuntimeInfo.GolangVer, usedCores, RuntimeInfo.AvailableCores)
+  	log.Printf("Runtime -  katyusha v.%s / %s / using cores: %s", appVersion, info.String(), strconv.Itoa(usedCores))
 }

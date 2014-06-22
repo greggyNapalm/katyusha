@@ -2,28 +2,17 @@ package main
 
 import (
 //    "encoding/json"
-	"bytes"
 	"fmt"
 	"log"
 	"net/http"
-	"os/exec"
 	"runtime"
-	"strings"
-//	"time"
 
-	"github.com/kr/pretty"
 	"github.com/docopt/docopt-go"
-
     "github.com/greggyNapalm/katyusha/katyushalib"
 )
 
 const version = "0.0.1"
-const workers_num = 1000
-const tgt_host, tgt_port = "127.0.0.1", 80
-
-func pp(data interface{}) {
-	fmt.Printf("\n%# v\n", pretty.Formatter(data))
-}
+var pp = katyushalib.PrettyPrint 
 
 func compose_url(tgt_addr string, tgt_port int) string {
 	return fmt.Sprintf("http://%s:%d", tgt_addr, tgt_port)
@@ -50,16 +39,7 @@ func remote_deal_reuse(dst_addr string) {
 	}
 }
 
-func get_uname() string {
-	cmd := exec.Command("uname", "-sr")
-	var out bytes.Buffer
-	cmd.Stdout = &out
-	err := cmd.Run()
-	if err != nil {
-		log.Fatal(err)
-	}
-	return strings.Trim(out.String(), "\n")
-}
+
 
 func main() {
       usage := `katyusha.
@@ -83,15 +63,5 @@ Options:
     runtimeInfo := katyushalib.CollectRuntimeInfo()
 
 	runtime.GOMAXPROCS(kcfg.MaxProcs)
-    katyushalib.LogRuntime(runtimeInfo, kcfg.MaxProcs)
-
-    pp(kcfg)
-    pp(runtimeInfo)
-
-	//cpu_num := runtime.NumCPU()
-
-	dst := compose_url(tgt_host, tgt_port)
-
-	log.Printf("Runtime: %s / golang %s / cores count %d", get_uname(), runtime.Version(), cpu_num)
-	log.Printf("Target addr: %s", dst)
+    katyushalib.LogRuntimeiInfo(runtimeInfo, kcfg.MaxProcs, version)
 }
