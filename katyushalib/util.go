@@ -2,28 +2,44 @@ package katyushalib
 
 import (
     "fmt"
-//    "reflect"
+	"bytes"
+	"log"
+	"strings"
+    //"reflect"
+	"os/exec"
+    "runtime"
     "encoding/json"
     "io/ioutil"
 
 	"github.com/kr/pretty"
 )
 
-//type KConfig struct {
-//    dst_host string `json:"dst_host"`
-//    dst_port int `json:"dst_port"`
-//    coroutines_cnt int `json:"coroutines_cnt"`
-//    max_procs int `json:"max_procs"`
-//}
+const DefaultCoroutinesCnt int = 1000
 
 type KConfig struct {
-    dst_host string
-    dst_port int
-    coroutines_cnt int
-    max_procs int
+    // main app config
+    DstHost string `json:"dst_host"`
+    DstPort int `json:"dst_port"`
+    CoroutinesCnt int `json:"coroutines_cnt"`
+    MaxProcs int `json:"max_procs"`
 }
-func (cfg *KConfig) SetDstHost(host string) {
-    cfg.dst_host = host
+
+type RuntimeInfo struct {
+    Uname string
+    GolangVer string
+    AvailableCores int
+}
+
+
+func (cfg *KConfig) Fulfil() {
+    //xt := reflect.TypeOf(cfg.MaxProcs).Kind()
+    //fmt.Printf("%T: %s\n", xt, xt)
+    if (cfg.MaxProcs <= 0){
+	    cfg.MaxProcs = runtime.NumCPU()
+    }
+    if (cfg.CoroutinesCnt <= 0){
+	    cfg.CoroutinesCnt = DefaultCoroutinesCnt
+    }
 }
 
 func PrettyPrint(data interface{}) {
@@ -35,28 +51,36 @@ func ComposeCfg(cfg_path string) KConfig {
     if err != nil {
         fmt.Print("Failed to read config file:", err)
     }
-    //fmt.Print(string(content[:]))
 
     var cfg KConfig
-    //var cfg map[string]interface{}
-    //content1 := []byte(`{"dst_host":"111","dst_port":"222"}`)
-    //fmt.Print(content)
     err = json.Unmarshal(content, &cfg)
     if err != nil {
         fmt.Print("Failed to parse config file:", err)
     }
-
-    //xt := reflect.TypeOf(content).Kind()
-
-    //cfg.SetDstHost("1.2.3.4")
-    //fmt.Print(cfg)
-    //fmt.Printf("%T: %s\n", xt, xt)
-
-    //cfg1 := KConfig{
-    //    dst_host: "127.0.0.1",
-    //    dst_port: 8080,
-    //    coroutines_cnt: 1000,
-    //    max_procs: 1000,
-    //}
+    cfg.Fulfil()
     return cfg
+}
+
+func get_uname() string {
+	cmd := exec.Command("uname", "-sr")
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	err := cmd.Run()
+	if err != nil {
+        fmt.Print(err)
+	}
+	return strings.Trim(out.String(), "\n")
+}
+
+func CollectRuntimeInfo() RuntimeInfo {
+    info := RuntimeInfo{
+        Uname: get_uname(),
+        GolangVer: runtime.Version(),
+        AvailableCores: runtime.NumCPU(),
+    }
+    return info
+}
+
+func LogRuntimeiInfo(info RuntimeInfo, usedCores int, appVersion string) {
+  	log.Printf("Runtime: katyusha v.%s / golang %s / cores used %d of %d", appVersion, RuntimeInfo.GolangVer, usedCores, RuntimeInfo.AvailableCores)
 }

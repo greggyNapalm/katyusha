@@ -79,17 +79,16 @@ Options:
   --version     Show version.`
 
     arguments, _ := docopt.Parse(usage, nil, true, "Katyusha load tool v." + version, false)
-    //fmt.Println(arguments)
-    //fmt.Println(arguments["KCFG_PATH"])
-
     kcfg := katyushalib.ComposeCfg(arguments["KCFG_PATH"].(string))
-    //kcfg := katyushalib.ComposeCfg("kconfig.json")
-	//log.Printf("\n\n\n--\n")
-    //fmt.Println(kcfg)
-    pp(kcfg)
+    runtimeInfo := katyushalib.CollectRuntimeInfo()
 
-	cpu_num := runtime.NumCPU()
-	runtime.GOMAXPROCS(cpu_num)
+	runtime.GOMAXPROCS(kcfg.MaxProcs)
+    katyushalib.LogRuntime(runtimeInfo, kcfg.MaxProcs)
+
+    pp(kcfg)
+    pp(runtimeInfo)
+
+	//cpu_num := runtime.NumCPU()
 
 	dst := compose_url(tgt_host, tgt_port)
 
