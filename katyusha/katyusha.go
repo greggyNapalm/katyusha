@@ -14,7 +14,7 @@ import (
 	"github.com/kr/pretty"
 	"github.com/docopt/docopt-go"
 
-    "github.com/greggyNapalm/katyushalib"
+    "github.com/greggyNapalm/katyusha/katyushalib"
 )
 
 const version = "0.0.1"
