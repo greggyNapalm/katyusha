@@ -8,7 +8,7 @@ type KConfig struct {
 }
 
 
-func compose_cfg(cfg_path string) KConfig {
+func ComposeCfg(cfg_path string) KConfig {
     cfg := KConfig{
         dst_host: "127.0.0.1",
         dst_port: 8080,

@@ -41,18 +41,6 @@ func remote_deal(dst_addr string) {
 }
 
 func remote_deal_reuse(dst_addr string) {
-	// Create isingle persistent TCP connection,
-	// use it in each interaction.
-
-	//res, _ := client.Do(req)
-	//io.Copy(ioutil.Discard, res.Body)
-	//res.Body.Close()
-	//
-	//To ensure http.Client connection reuse be sure to do two things:
-	//
-	//Read until Response is complete (i.e. ioutil.ReadAll(resp.Body))
-	//Call Body.Close()
-
 	for {
 		//http.Get("http://127.0.0.1:80")
 		_, err := http.Get(dst_addr)
@@ -94,7 +82,7 @@ Options:
     fmt.Println(arguments)
     fmt.Println(arguments["KCFG_PATH"])
 
-    kcfg := katyushalib.compose_cfg(arguments["KCFG_PATH"])
+    kcfg := katyushalib.ComposeCfg(arguments["KCFG_PATH"])
 
 	cpu_num := runtime.NumCPU()
 	runtime.GOMAXPROCS(cpu_num)
