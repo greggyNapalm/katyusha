@@ -21,13 +21,6 @@ const version = "0.0.1"
 const workers_num = 1000
 const tgt_host, tgt_port = "127.0.0.1", 80
 
-type KConfig struct {
-    dst_host []string
-    dst_port int
-    coroutines_cnt int
-    max_procs int
-}
-
 func pp(data interface{}) {
 	fmt.Printf("%# v", pretty.Formatter(data))
 }
@@ -101,7 +94,7 @@ Options:
     fmt.Println(arguments)
     fmt.Println(arguments["KCFG_PATH"])
 
-    kcfg := compose_cfg(arguments["KCFG_PATH"])
+    kcfg := katyushalib.compose_cfg(arguments["KCFG_PATH"])
 
 	cpu_num := runtime.NumCPU()
 	runtime.GOMAXPROCS(cpu_num)
