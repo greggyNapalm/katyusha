@@ -22,7 +22,7 @@ const workers_num = 1000
 const tgt_host, tgt_port = "127.0.0.1", 80
 
 func pp(data interface{}) {
-	fmt.Printf("%# v", pretty.Formatter(data))
+	fmt.Printf("\n%# v\n", pretty.Formatter(data))
 }
 
 func compose_url(tgt_addr string, tgt_port int) string {
@@ -79,11 +79,13 @@ Options:
   --version     Show version.`
 
     arguments, _ := docopt.Parse(usage, nil, true, "Katyusha load tool v." + version, false)
-    fmt.Println(arguments)
-    fmt.Println(arguments["KCFG_PATH"])
+    //fmt.Println(arguments)
+    //fmt.Println(arguments["KCFG_PATH"])
 
-    //kcfg := katyushalib.ComposeCfg(arguments["KCFG_PATH"])
-    kcfg := katyushalib.ComposeCfg("kconfig.json")
+    kcfg := katyushalib.ComposeCfg(arguments["KCFG_PATH"].(string))
+    //kcfg := katyushalib.ComposeCfg("kconfig.json")
+	//log.Printf("\n\n\n--\n")
+    //fmt.Println(kcfg)
     pp(kcfg)
 
 	cpu_num := runtime.NumCPU()

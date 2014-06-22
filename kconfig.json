@@ -1,6 +1,6 @@
 {
-    "dst_host": "127.0.0.1"
-    "dst_port": 8080
-    "coroutines_cnt": -1
+    "dst_host": "127.0.0.1",
+    "dst_port": 8080,
+    "coroutines_cnt": -1,
     "max_procs": -1
 }
